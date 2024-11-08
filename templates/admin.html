@@ -3,6 +3,29 @@
 {% block content %}
 <h2 class="mb-4">Väntande organisationer</h2>
 
+<div class="row mb-4">
+    <div class="col-12">
+        <form method="get" class="row g-3">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="Sök efter väntande organisationer..." 
+                           value="{{ search_term }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Sök
+                    </button>
+                    <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Återställ
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="row">
     {% for org in organizations %}
     <div class="col-md-6 mb-4">
@@ -35,14 +58,18 @@
                 </dl>
 
                 <form action="{{ url_for('approve_organization', org_id=org.id) }}" method="post" class="mt-3">
-                    <button type="submit" class="btn btn-success">Godkänn</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i> Godkänn
+                    </button>
                 </form>
             </div>
         </div>
     </div>
     {% else %}
     <div class="col">
-        <p>Inga väntande organisationer att granska.</p>
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Inga väntande organisationer att granska.
+        </div>
     </div>
     {% endfor %}
 </div>

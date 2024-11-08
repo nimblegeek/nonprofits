@@ -34,7 +34,6 @@ def seed_municipalities():
     ]
     try:
         for name in municipalities:
-            # Check if municipality already exists
             if not Municipality.query.filter_by(name=name).first():
                 municipality = Municipality(name=name)
                 db.session.add(municipality)
@@ -47,23 +46,25 @@ def seed_municipalities():
 
 @app.route('/')
 def index():
-    municipalities = Municipality.query.all()
+    municipalities = Municipality.query.order_by(Municipality.name).all()
     selected_municipality = request.args.get('municipality', type=int)
-    query = Organization.query.filter_by(approved=True)
+    search_term = request.args.get('search', '').strip()
     
-    if selected_municipality:
-        query = query.filter_by(municipality_id=selected_municipality)
+    organizations = Organization.search(
+        search_term=search_term,
+        municipality_id=selected_municipality
+    )
     
-    organizations = query.all()
     return render_template('index.html', 
                          organizations=organizations,
                          municipalities=municipalities,
-                         selected_municipality=selected_municipality)
+                         selected_municipality=selected_municipality,
+                         search_term=search_term)
 
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     form = OrganizationForm()
-    form.municipality_id.choices = [(m.id, m.name) for m in Municipality.query.all()]
+    form.municipality_id.choices = [(m.id, m.name) for m in Municipality.query.order_by(Municipality.name).all()]
     
     if form.validate_on_submit():
         org = Organization(
@@ -84,8 +85,12 @@ def submit():
 
 @app.route('/admin')
 def admin():
-    pending_organizations = Organization.query.filter_by(approved=False).all()
-    return render_template('admin.html', organizations=pending_organizations)
+    search_term = request.args.get('search', '').strip()
+    pending_organizations = Organization.search(
+        search_term=search_term,
+        approved=False
+    )
+    return render_template('admin.html', organizations=pending_organizations, search_term=search_term)
 
 @app.route('/approve/<int:org_id>', methods=['POST'])
 def approve_organization(org_id):

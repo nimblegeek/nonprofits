@@ -2,17 +2,37 @@
 
 {% block content %}
 <div class="row mb-4">
-    <div class="col-md-6">
-        <form method="get" class="d-flex">
-            <select name="municipality" class="form-select me-2" onchange="this.form.submit()">
-                <option value="">Alla kommuner</option>
-                {% for municipality in municipalities %}
-                <option value="{{ municipality.id }}" 
-                        {% if selected_municipality == municipality.id %}selected{% endif %}>
-                    {{ municipality.name }}
-                </option>
-                {% endfor %}
-            </select>
+    <div class="col-12">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="Sök efter organisationer..." 
+                           value="{{ search_term }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select name="municipality" class="form-select">
+                    <option value="">Alla kommuner</option>
+                    {% for municipality in municipalities %}
+                    <option value="{{ municipality.id }}" 
+                            {% if selected_municipality == municipality.id %}selected{% endif %}>
+                        {{ municipality.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter"></i> Filtrera
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Återställ
+                </a>
+            </div>
         </form>
     </div>
 </div>
@@ -50,6 +70,12 @@
                 </li>
                 {% endif %}
             </ul>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Inga organisationer hittades med de angivna filtren.
         </div>
     </div>
     {% endfor %}

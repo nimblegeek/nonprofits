@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime
+from sqlalchemy import or_
 
 class Municipality(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,3 +18,23 @@ class Organization(db.Model):
     municipality_id = db.Column(db.Integer, db.ForeignKey('municipality.id'), nullable=False)
     approved = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    @classmethod
+    def search(cls, search_term=None, municipality_id=None, approved=True):
+        query = cls.query
+        
+        if search_term:
+            search_filter = or_(
+                cls.name.ilike(f'%{search_term}%'),
+                cls.description.ilike(f'%{search_term}%'),
+                cls.email.ilike(f'%{search_term}%'),
+                cls.address.ilike(f'%{search_term}%')
+            )
+            query = query.filter(search_filter)
+        
+        if municipality_id:
+            query = query.filter_by(municipality_id=municipality_id)
+            
+        query = query.filter_by(approved=approved)
+        
+        return query.order_by(cls.name)
