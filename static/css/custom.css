@@ -1,0 +1,26 @@
+/* Custom styles to complement Bootstrap */
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Typography improvements for Swedish text */
+body {
+    line-height: 1.6;
+}
+
+/* Custom spacing for forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Improved responsive behavior */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

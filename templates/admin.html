@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Väntande organisationer</h2>
+
+<div class="row">
+    {% for org in organizations %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ org.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ org.municipality.name }}</h6>
+                <p class="card-text">{{ org.description }}</p>
+                
+                <dl class="row">
+                    {% if org.website %}
+                    <dt class="col-sm-3">Webbplats:</dt>
+                    <dd class="col-sm-9"><a href="{{ org.website }}">{{ org.website }}</a></dd>
+                    {% endif %}
+                    
+                    {% if org.email %}
+                    <dt class="col-sm-3">E-post:</dt>
+                    <dd class="col-sm-9"><a href="mailto:{{ org.email }}">{{ org.email }}</a></dd>
+                    {% endif %}
+                    
+                    {% if org.phone %}
+                    <dt class="col-sm-3">Telefon:</dt>
+                    <dd class="col-sm-9">{{ org.phone }}</dd>
+                    {% endif %}
+                    
+                    {% if org.address %}
+                    <dt class="col-sm-3">Adress:</dt>
+                    <dd class="col-sm-9">{{ org.address }}</dd>
+                    {% endif %}
+                </dl>
+
+                <form action="{{ url_for('approve_organization', org_id=org.id) }}" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-success">Godkänn</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col">
+        <p>Inga väntande organisationer att granska.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

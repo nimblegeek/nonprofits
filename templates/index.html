@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="d-flex">
+            <select name="municipality" class="form-select me-2" onchange="this.form.submit()">
+                <option value="">Alla kommuner</option>
+                {% for municipality in municipalities %}
+                <option value="{{ municipality.id }}" 
+                        {% if selected_municipality == municipality.id %}selected{% endif %}>
+                    {{ municipality.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for org in organizations %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ org.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ org.municipality.name }}</h6>
+                <p class="card-text">{{ org.description }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if org.website %}
+                <li class="list-group-item">
+                    <i class="fas fa-globe"></i> 
+                    <a href="{{ org.website }}" target="_blank">Webbplats</a>
+                </li>
+                {% endif %}
+                {% if org.email %}
+                <li class="list-group-item">
+                    <i class="fas fa-envelope"></i> 
+                    <a href="mailto:{{ org.email }}">{{ org.email }}</a>
+                </li>
+                {% endif %}
+                {% if org.phone %}
+                <li class="list-group-item">
+                    <i class="fas fa-phone"></i> {{ org.phone }}
+                </li>
+                {% endif %}
+                {% if org.address %}
+                <li class="list-group-item">
+                    <i class="fas fa-map-marker-alt"></i> {{ org.address }}
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
