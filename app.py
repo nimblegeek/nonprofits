@@ -20,6 +20,31 @@ db.init_app(app)
 from models import Municipality, Organization
 from forms import OrganizationForm
 
+def seed_municipalities():
+    municipalities = [
+        "Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås", "Örebro", 
+        "Linköping", "Helsingborg", "Jönköping", "Norrköping", "Lund", "Umeå",
+        "Gävle", "Borås", "Södertälje", "Eskilstuna", "Halmstad", "Växjö",
+        "Karlstad", "Sundsvall", "Östersund", "Trollhättan", "Luleå", "Kalmar",
+        "Falun", "Skellefteå", "Karlskrona", "Kristianstad", "Skövde", "Uddevalla",
+        "Botkyrka", "Nacka", "Örnsköldsvik", "Varberg", "Motala", "Enköping",
+        "Nyköping", "Sandviken", "Trelleborg", "Landskrona", "Ängelholm", "Lidköping",
+        "Piteå", "Gotland", "Norrtälje", "Falkenberg", "Karlskoga", "Ystad",
+        "Kiruna", "Katrineholm"
+    ]
+    try:
+        for name in municipalities:
+            # Check if municipality already exists
+            if not Municipality.query.filter_by(name=name).first():
+                municipality = Municipality(name=name)
+                db.session.add(municipality)
+        db.session.commit()
+        print("Successfully seeded municipalities")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error seeding municipalities: {str(e)}")
+        raise
+
 @app.route('/')
 def index():
     municipalities = Municipality.query.all()
@@ -72,3 +97,4 @@ def approve_organization(org_id):
 
 with app.app_context():
     db.create_all()
+    seed_municipalities()
