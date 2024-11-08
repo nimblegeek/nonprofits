@@ -11,11 +11,15 @@
                     </span>
                     <input type="text" name="search" class="form-control" 
                            placeholder="Sök efter organisationer..." 
-                           value="{{ search_term }}">
+                           value="{{ search_term }}"
+                           data-bs-toggle="tooltip"
+                           title="Sök på namn, beskrivning eller plats">
                 </div>
             </div>
             <div class="col-md-4">
-                <select name="municipality" class="form-select">
+                <select name="municipality" class="form-select" 
+                        data-bs-toggle="tooltip"
+                        title="Filtrera efter kommun">
                     <option value="">Alla kommuner</option>
                     {% for municipality in municipalities %}
                     <option value="{{ municipality.id }}" 
@@ -40,40 +44,43 @@
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for org in organizations %}
     <div class="col">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ org.name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ org.municipality.name }}</h6>
-                <p class="card-text">{{ org.description }}</p>
+        <a href="{{ url_for('organization_details', org_id=org.id) }}" class="card-link">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ org.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ org.municipality.name }}</h6>
+                    <p class="card-text">{{ org.description }}</p>
+                    <!-- Category badges will be added here by JavaScript -->
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% if org.website %}
+                    <li class="list-group-item">
+                        <i class="fas fa-globe"></i> 
+                        <span>Webbplats</span>
+                    </li>
+                    {% endif %}
+                    {% if org.email %}
+                    <li class="list-group-item">
+                        <i class="fas fa-envelope"></i> 
+                        <span>{{ org.email }}</span>
+                    </li>
+                    {% endif %}
+                    {% if org.phone %}
+                    <li class="list-group-item">
+                        <i class="fas fa-phone"></i> {{ org.phone }}
+                    </li>
+                    {% endif %}
+                    {% if org.address %}
+                    <li class="list-group-item">
+                        <i class="fas fa-map-marker-alt"></i> {{ org.address }}
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
-            <ul class="list-group list-group-flush">
-                {% if org.website %}
-                <li class="list-group-item">
-                    <i class="fas fa-globe"></i> 
-                    <a href="{{ org.website }}" target="_blank">Webbplats</a>
-                </li>
-                {% endif %}
-                {% if org.email %}
-                <li class="list-group-item">
-                    <i class="fas fa-envelope"></i> 
-                    <a href="mailto:{{ org.email }}">{{ org.email }}</a>
-                </li>
-                {% endif %}
-                {% if org.phone %}
-                <li class="list-group-item">
-                    <i class="fas fa-phone"></i> {{ org.phone }}
-                </li>
-                {% endif %}
-                {% if org.address %}
-                <li class="list-group-item">
-                    <i class="fas fa-map-marker-alt"></i> {{ org.address }}
-                </li>
-                {% endif %}
-            </ul>
-        </div>
+        </a>
     </div>
     {% else %}
-    <div class="col-12">
+    <div class="col-12 no-results">
         <div class="alert alert-info">
             <i class="fas fa-info-circle"></i> Inga organisationer hittades med de angivna filtren.
         </div>

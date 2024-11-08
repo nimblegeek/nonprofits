@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Hem</a></li>
+                <li class="breadcrumb-item active">{{ org.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-3">{{ org.name }}</h2>
+                <h6 class="card-subtitle mb-3 text-muted">{{ org.municipality.name }}</h6>
+                
+                <p class="card-text">{{ org.description }}</p>
+                
+                <hr>
+                
+                <dl class="row">
+                    {% if org.website %}
+                    <dt class="col-sm-3">Webbplats:</dt>
+                    <dd class="col-sm-9">
+                        <a href="{{ org.website }}" target="_blank" class="text-info">
+                            {{ org.website }}
+                            <i class="fas fa-external-link-alt ms-1"></i>
+                        </a>
+                    </dd>
+                    {% endif %}
+                    
+                    {% if org.email %}
+                    <dt class="col-sm-3">E-post:</dt>
+                    <dd class="col-sm-9">
+                        <a href="mailto:{{ org.email }}" class="text-info">
+                            {{ org.email }}
+                        </a>
+                    </dd>
+                    {% endif %}
+                    
+                    {% if org.phone %}
+                    <dt class="col-sm-3">Telefon:</dt>
+                    <dd class="col-sm-9">{{ org.phone }}</dd>
+                    {% endif %}
+                    
+                    {% if org.address %}
+                    <dt class="col-sm-3">Adress:</dt>
+                    <dd class="col-sm-9">{{ org.address }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

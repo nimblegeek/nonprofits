@@ -157,6 +157,13 @@ def index():
                          selected_municipality=selected_municipality,
                          search_term=search_term)
 
+@app.route('/organization/<int:org_id>')
+def organization_details(org_id):
+    org = Organization.query.get_or_404(org_id)
+    if not org.approved:
+        return redirect(url_for('index'))
+    return render_template('organization.html', org=org)
+
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     form = OrganizationForm()
